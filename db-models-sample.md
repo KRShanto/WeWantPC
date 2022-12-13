@@ -13,6 +13,16 @@ This project is a e-commerce application which sells computer parts. The databas
 - role
 - createdAt
 
+The role will one of the following
+
+- Admin
+- User
+- Staff
+
+If the role is staff, then it will also store the permissions of the user.
+
+the syntax will be Staff{read, write, delete}
+
 ## Product
 
 - id
