@@ -1,6 +1,7 @@
 pub mod models;
 pub mod routes;
 pub mod schema;
+pub mod utils;
 
 pub const SESSION_NAME: &str = "user_id";
 
