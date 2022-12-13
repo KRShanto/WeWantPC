@@ -6,26 +6,32 @@ use actix_web::{
     web::{self, Data},
     App, HttpServer,
 };
-use diesel::pg::PgConnection;
-use diesel::r2d2::{self, ConnectionManager};
-use wewantpc::routes::{login_route, logout_route, register_route, whoami_route};
-use wewantpc::DbPool;
+
+use log::info;
+use wewantpc::{
+    handle_user_input::handle_user_input,
+    routes::{login_route, logout_route, register_route, whoami_route},
+    utils::{get_input, get_pool},
+};
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
-    //info, debug, warn, error
     env_logger::init();
     dotenv::dotenv().ok().unwrap();
 
-    // set up database connection pool
-    let dbconnection = std::env::var("DATABASE_URL").expect("DATABASE_URL not found!");
+    let pool = get_pool();
 
-    // PostgreSQL connnection manager
-    let manager = ConnectionManager::<PgConnection>::new(dbconnection);
-
-    let pool: DbPool = r2d2::Pool::builder()
-        .build(manager)
-        .expect("Failed to create pool.");
+    // spawn a new tokio task to listen user input
+    info!("Listening user input... (type `h` for help)");
+    {
+        let pool = pool.clone();
+        tokio::spawn(async move {
+            loop {
+                let input = get_input(None);
+                handle_user_input(input.trim(), pool.clone()).await;
+            }
+        });
+    }
 
     HttpServer::new(move || {
         App::new()

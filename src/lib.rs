@@ -1,3 +1,4 @@
+pub mod handle_user_input;
 pub mod models;
 pub mod routes;
 pub mod schema;
