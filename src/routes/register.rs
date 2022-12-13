@@ -1,4 +1,5 @@
 use crate::models::{NewUser, User};
+use crate::utils::create_user;
 use crate::ResponseType;
 use crate::Role;
 use crate::SESSION_NAME;
@@ -8,10 +9,7 @@ use actix_web::{
     web::{self, block},
     HttpResponse, Responder,
 };
-use argon2::{
-    password_hash::{rand_core::OsRng, PasswordHasher, SaltString},
-    Argon2,
-};
+
 use diesel::prelude::*;
 
 /// Register a new user
@@ -21,6 +19,7 @@ use diesel::prelude::*;
 /// Then it will hash the password using argon2.
 /// Then it will insert the user into the database.
 /// After that it will log the user in using the session.
+// TODO: validate the email and password
 #[post("/register")]
 pub async fn register_route(
     session: Session,
@@ -49,32 +48,12 @@ pub async fn register_route(
         return HttpResponse::Ok().json(ResponseType::AlreadyExists);
     }
 
-    let argon2 = Argon2::default();
-    let salt = SaltString::generate(&mut OsRng);
-
-    let password_hash = argon2
-        .hash_password(new_user.password.as_bytes(), &salt)
-        .unwrap()
-        .to_string();
-
-    let user = NewUser {
-        name: new_user.name,
-        email: new_user.email,
-        password: password_hash,
+    let new_user = NewUser {
         role: String::from(Role::User),
+        ..new_user
     };
 
-    let created_user = block(move || {
-        use crate::schema::users;
-        let mut conn = pool.get().unwrap();
-        diesel::insert_into(users::table)
-            .values(&user)
-            .get_result::<User>(&mut conn)
-    })
-    .await
-    .unwrap();
-
-    match created_user {
+    match create_user((*pool.into_inner()).clone(), new_user).await {
         Ok(user) => {
             session.insert(SESSION_NAME, user.id).unwrap();
             HttpResponse::Ok().json(ResponseType::Success)
@@ -85,8 +64,4 @@ pub async fn register_route(
             HttpResponse::Ok().json(ResponseType::ServerError)
         }
     }
-
-    // session.insert(SESSION_NAME, user.id).unwrap();
-
-    // HttpResponse::Ok().json(ResponseType::Success)
 }
