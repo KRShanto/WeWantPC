@@ -12,6 +12,10 @@ This project is a e-commerce application which sells computer parts. The databas
 - password
 - role
 - createdAt
+- address
+- phone
+- image_url
+- verified
 
 The role will one of the following
 
@@ -79,3 +83,30 @@ The `names_values` will be the specifications of the product. It will be a strin
 - user_id
 - question_id
 - createdAt
+
+## Review
+
+- id
+- review
+- user_id
+- product_id
+
+## Cart
+
+- id
+- user_id
+- product_id
+
+## Order
+
+- id
+- user_id
+- product_id
+- quantity
+- createdAt
+
+## Star
+
+- id
+- user_id
+- product_id
