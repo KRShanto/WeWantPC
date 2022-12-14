@@ -1,7 +1,4 @@
 -- Your SQL goes here
--- id
--- names_values
--- product_id
 
 CREATE TABLE specifications (
     id SERIAL PRIMARY KEY,

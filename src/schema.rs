@@ -1,6 +1,16 @@
 // @generated automatically by Diesel CLI.
 
 diesel::table! {
+    categories (id) {
+        id -> Int4,
+        name -> Varchar,
+        description -> Text,
+        created_at -> Timestamp,
+        created_by -> Int4,
+    }
+}
+
+diesel::table! {
     products (id) {
         id -> Int4,
         name -> Varchar,
@@ -9,7 +19,8 @@ diesel::table! {
         price -> Int4,
         quantity -> Int4,
         image_url -> Varchar,
-        createdat -> Nullable<Timestamp>,
+        created_at -> Nullable<Timestamp>,
+        created_by -> Int4,
         category_id -> Int4,
         brand -> Varchar,
     }
@@ -38,9 +49,13 @@ diesel::table! {
     }
 }
 
+diesel::joinable!(categories -> users (created_by));
+diesel::joinable!(products -> categories (category_id));
+diesel::joinable!(products -> users (created_by));
 diesel::joinable!(specifications -> products (product_id));
 
 diesel::allow_tables_to_appear_in_same_query!(
+    categories,
     products,
     specifications,
     users,

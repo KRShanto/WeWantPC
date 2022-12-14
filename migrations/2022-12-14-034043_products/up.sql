@@ -8,7 +8,7 @@ CREATE TABLE products (
     price INT NOT NULL,
     quantity INT NOT NULL,
     image_url VARCHAR(255) NOT NULL,
-    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     created_by INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     category_id INTEGER NOT NULL REFERENCES categories(id) ON DELETE CASCADE,
     brand VARCHAR(255) NOT NULL    
