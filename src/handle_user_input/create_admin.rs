@@ -1,4 +1,4 @@
-use crate::models::NewUser;
+use crate::models::users::NewUser;
 use crate::utils::create_user;
 use crate::utils::get_input;
 use crate::DbPool;
