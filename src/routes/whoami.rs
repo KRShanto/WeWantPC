@@ -1,4 +1,4 @@
-use crate::models::User;
+use crate::models::users::User;
 use crate::ResponseType;
 use crate::SESSION_NAME;
 use actix_session::Session;

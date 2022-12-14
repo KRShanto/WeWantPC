@@ -1,4 +1,4 @@
-use crate::models::{NewUser, User};
+use crate::models::users::{NewUser, User};
 use crate::utils::create_user;
 use crate::ResponseType;
 use crate::Role;

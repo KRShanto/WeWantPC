@@ -1,4 +1,4 @@
-use crate::models::{NewUser, User};
+use crate::models::users::{NewUser, User};
 use crate::DbPool;
 use actix_web::web::block;
 use argon2::{
