@@ -12,6 +12,10 @@ pub struct User {
     pub password: String,
     pub role: String,
     pub created_at: Option<chrono::NaiveDateTime>,
+    pub address: Option<String>,
+    pub phone: Option<String>,
+    pub verified: Option<bool>,
+    pub img_url: Option<String>,
 }
 
 #[derive(Insertable, Serialize, Deserialize, Debug)]
