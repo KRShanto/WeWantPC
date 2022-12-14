@@ -2,7 +2,7 @@ use crate::schema::users;
 use diesel::prelude::*;
 use serde::{Deserialize, Serialize};
 
-#[derive(Queryable, Serialize, Deserialize, Debug)]
+#[derive(Queryable, Serialize, Deserialize, Debug, Clone)]
 pub struct User {
     pub id: i32,
     pub name: String,
@@ -18,7 +18,7 @@ pub struct User {
     pub img_url: Option<String>,
 }
 
-#[derive(Insertable, Serialize, Deserialize, Debug)]
+#[derive(Insertable, Serialize, Deserialize, Debug, Clone)]
 #[diesel(table_name = users)]
 pub struct NewUser {
     pub name: String,

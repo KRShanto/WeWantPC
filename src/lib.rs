@@ -21,6 +21,7 @@ pub enum Role {
     Staff(Vec<Permission>),
 }
 
+// String -> Role
 impl From<String> for Role {
     fn from(role: String) -> Self {
         match role.as_str() {
@@ -51,6 +52,7 @@ impl From<String> for Role {
     }
 }
 
+// Role -> String
 impl From<Role> for String {
     fn from(role: Role) -> Self {
         match role {
