@@ -1,0 +1,2 @@
+(B) Add featured products option in product model
+(B) Add image slider option in product model
