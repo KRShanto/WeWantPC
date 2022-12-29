@@ -10,7 +10,10 @@ use actix_web::{
 use log::info;
 use wewantpc::{
     handle_user_input::handle_user_input,
-    routes::{create_staff_route, login_route, logout_route, register_route, whoami_route},
+    routes::{
+        create_product_route, create_staff_route, login_route, logout_route, register_route,
+        whoami_route,
+    },
     utils::{get_input, get_pool},
 };
 // TODO add chatting feature for the admin and staff
@@ -59,6 +62,7 @@ async fn main() -> std::io::Result<()> {
             .service(logout_route)
             .service(whoami_route)
             .service(create_staff_route)
+            .service(create_product_route)
     })
     .bind("127.0.0.1:8080")?
     .run()

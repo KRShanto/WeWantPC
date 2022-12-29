@@ -14,7 +14,7 @@ pub use serde::{Deserialize, Serialize};
 pub type DbPool = diesel::r2d2::Pool<diesel::r2d2::ConnectionManager<diesel::PgConnection>>;
 
 /// Roles for maintaining an ecommerce site
-#[derive(Serialize, Deserialize, Debug, Clone)]
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq, Eq)]
 pub enum Role {
     Admin,
     User,
@@ -108,18 +108,20 @@ fn test_role() {
     assert_eq!(role.to_string(), "Staff(Read,Write)".to_string());
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone)]
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq, Eq)]
 pub enum Permission {
+    Create,
     Read,
-    Write,
+    Update,
     Delete,
 }
 
 impl From<String> for Permission {
     fn from(permission: String) -> Self {
         match permission.as_str() {
+            "create" | "Create" => Permission::Create,
             "read" | "Read" => Permission::Read,
-            "write" | "Write" => Permission::Write,
+            "update" | "Update" => Permission::Update,
             "delete" | "Delete" => Permission::Delete,
             _ => Permission::Read,
         }
@@ -129,8 +131,9 @@ impl From<String> for Permission {
 impl From<Permission> for String {
     fn from(permission: Permission) -> Self {
         match permission {
+            Permission::Create => "Create".to_string(),
             Permission::Read => "Read".to_string(),
-            Permission::Write => "Write".to_string(),
+            Permission::Update => "Update".to_string(),
             Permission::Delete => "Delete".to_string(),
         }
     }
@@ -139,17 +142,22 @@ impl From<Permission> for String {
 impl Display for Permission {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         match self {
+            Permission::Create => write!(f, "Create"),
             Permission::Read => write!(f, "Read"),
-            Permission::Write => write!(f, "Write"),
+            Permission::Update => write!(f, "Update"),
             Permission::Delete => write!(f, "Delete"),
         }
     }
 }
 
 #[derive(Serialize, Deserialize, Debug)]
+#[non_exhaustive]
 pub enum ResponseType {
     AlreadyExists,
     Success,
     NotFound,
     ServerError,
+    NoPermission,
+    InvalidInput,
+    Unauthorized,
 }
