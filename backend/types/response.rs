@@ -24,6 +24,14 @@ pub struct Response {
 }
 
 impl Response {
+    pub fn new(response_type: ResponseType) -> Self {
+        Self {
+            response_type,
+            message: None,
+            data: None,
+        }
+    }
+
     pub fn already_exists() -> Self {
         Self {
             response_type: ResponseType::AlreadyExists,
@@ -93,8 +101,8 @@ impl Response {
         self
     }
 
-    pub fn data(mut self, data: serde_json::Value) -> Self {
-        self.data = Some(data);
+    pub fn data<T: serde::Serialize>(mut self, data: T) -> Self {
+        self.data = Some(serde_json::to_value(data).unwrap());
         self
     }
 

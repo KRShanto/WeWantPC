@@ -1,11 +1,11 @@
 use crate::models::users::User;
-use crate::ResponseType;
+use crate::Response;
 use crate::SESSION_NAME;
 use actix_session::Session;
 use actix_web::{
     get,
     web::{block, Data},
-    HttpResponse, Responder,
+    Responder,
 };
 use diesel::prelude::*;
 use log::warn;
@@ -16,7 +16,7 @@ pub async fn whoami_route(session: Session, pool: Data<crate::DbPool>) -> impl R
 
     if user_id.is_none() {
         warn!("User not logged in");
-        return HttpResponse::Ok().json(ResponseType::NotFound);
+        return Response::unauthorized().msg("User not logged in").send();
     }
 
     let user_id = user_id.unwrap();
@@ -32,8 +32,11 @@ pub async fn whoami_route(session: Session, pool: Data<crate::DbPool>) -> impl R
 
     if user.is_none() {
         warn!("No user present");
-        return HttpResponse::Ok().json(ResponseType::NotFound);
+        return Response::unauthorized().msg("No user present").send();
     }
 
-    HttpResponse::Ok().json(user.unwrap())
+    Response::success()
+        .data(user.unwrap())
+        .msg("User is logged in")
+        .send()
 }

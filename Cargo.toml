@@ -3,7 +3,13 @@ name = "wewantpc"
 version = "0.1.0"
 edition = "2021"
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+[[bin]]
+name = "wewantpc"
+path = "backend/main.rs"
+
+[lib]
+name = "wewantpc"
+path = "backend/lib.rs"
 
 [dependencies]
 actix = "0.13.0"
