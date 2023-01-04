@@ -1,10 +1,14 @@
 import Link from "next/link";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
+import { UserContext } from "../contexts/user";
 import post from "../utils/post";
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  const userContext = useContext(UserContext);
+  const setUser = userContext?.setUser;
 
   async function handleSubmit(e: any) {
     e.preventDefault();
@@ -16,6 +20,11 @@ export default function Login() {
 
     if (json.type === "Success") {
       alert("Logged in successfully");
+
+      // Set the user
+      if (setUser) {
+        setUser(json.data);
+      }
     } else {
       alert("Failed to log in");
     }
