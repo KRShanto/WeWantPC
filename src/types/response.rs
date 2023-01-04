@@ -17,6 +17,7 @@ pub enum ResponseType {
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Response {
+    #[serde(rename = "type")]
     response_type: ResponseType,
     message: Option<String>,
     data: Option<serde_json::Value>,

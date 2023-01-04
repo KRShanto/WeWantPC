@@ -1,8 +1,8 @@
 use crate::models::users::User;
-use crate::ResponseType;
+use crate::Response;
 use crate::SESSION_NAME;
 use actix_session::Session;
-use actix_web::{post, web, web::block, HttpResponse, Responder};
+use actix_web::{post, web, web::block, Responder};
 use argon2::{
     password_hash::{PasswordHash, PasswordVerifier},
     Argon2,
@@ -43,7 +43,8 @@ pub async fn login_route(
 
     if user.is_none() {
         warn!("No user present");
-        return HttpResponse::Ok().json(ResponseType::NotFound);
+        // return HttpResponse::Ok().json(ResponseType::NotFound);
+        return Response::not_found().msg("No user present").send();
     }
 
     let user = user.unwrap();
@@ -59,10 +60,12 @@ pub async fn login_route(
 
     if !password {
         warn!("Password is incorrect");
-        return HttpResponse::Ok().json(ResponseType::NotFound);
+        // return HttpResponse::Ok().json(ResponseType::NotFound);
+        return Response::incorrect_password().send();
     }
 
     session.insert(SESSION_NAME, user.id).unwrap();
 
-    HttpResponse::Ok().json(ResponseType::Success)
+    // HttpResponse::Ok().json(ResponseType::Success)
+    Response::success().msg("Logged in successfully").send()
 }

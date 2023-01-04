@@ -42,6 +42,7 @@ async fn main() -> std::io::Result<()> {
             .wrap(
                 Cors::default()
                     .allowed_origin("http://127.0.0.1:3000")
+                    .allowed_origin("http://localhost:3000")
                     .allow_any_header()
                     .allow_any_method()
                     .supports_credentials(),
