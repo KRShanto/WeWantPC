@@ -1,5 +1,6 @@
 import Link from "next/link";
 import React, { useState } from "react";
+import post from "../utils/post";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -8,20 +9,16 @@ export default function Login() {
   async function handleSubmit(e: any) {
     e.preventDefault();
 
-    const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/login`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        email,
-        password,
-      }),
+    const json = await post("/login", {
+      email,
+      password,
     });
 
-    const json = await res.json();
-
-    console.log(json);
+    if (json.type === "Success") {
+      alert("Logged in successfully");
+    } else {
+      alert("Failed to log in");
+    }
   }
 
   return (
