@@ -49,11 +49,15 @@ pub async fn login_route(
 
     let user = user.unwrap();
 
-    let password = block(move || {
-        let hash = PasswordHash::new(&user.password).unwrap();
-        Argon2::default()
-            .verify_password(user_to_login.password.as_bytes(), &hash)
-            .is_ok()
+    let password = block({
+        let user_password = user.password.clone();
+
+        move || {
+            let hash = PasswordHash::new(&user_password).unwrap();
+            Argon2::default()
+                .verify_password(user_to_login.password.as_bytes(), &hash)
+                .is_ok()
+        }
     })
     .await
     .unwrap();
@@ -67,5 +71,8 @@ pub async fn login_route(
     session.insert(SESSION_NAME, user.id).unwrap();
 
     // HttpResponse::Ok().json(ResponseType::Success)
-    Response::success().msg("Logged in successfully").send()
+    Response::success()
+        .msg("Logged in successfully")
+        .data(user)
+        .send()
 }
