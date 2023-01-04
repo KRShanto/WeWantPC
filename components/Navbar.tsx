@@ -1,8 +1,10 @@
-import { useState, useEffect } from "react";
+import { useContext, useState, useEffect } from "react";
 import Link from "next/link";
+import { UserContext } from "../contexts/user";
 
 export default function Navbar() {
-  // home, pc-components, compare, login/register, dashboard(later), cart, help
+  const userContext = useContext(UserContext);
+  const user = userContext?.user;
 
   return (
     <nav>
@@ -20,7 +22,9 @@ export default function Navbar() {
         <Link href="/login">Login</Link>
         <Link href="/cart">Cart</Link>
         <Link href="/help">Help</Link>
-        {/* TODO <Link href="/dashboard">Dashboard</Link> */}
+        {user && user.role === "Admin" && (
+          <Link href="/dashboard">Dashboard</Link>
+        )}
       </div>
     </nav>
   );

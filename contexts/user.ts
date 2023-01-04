@@ -5,7 +5,7 @@ export type UserType = {
   id: string;
   name: string;
   email: string;
-  role: string;
+  role: "Admin" | "User";
   created_at: string;
   address: string;
   phone: string;
