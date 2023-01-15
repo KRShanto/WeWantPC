@@ -16,6 +16,7 @@ use wewantpc::{
     },
     utils::{get_input, get_pool},
 };
+
 // TODO add chatting feature for the admin and staff
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
@@ -50,11 +51,12 @@ async fn main() -> std::io::Result<()> {
             .wrap(Logger::default())
             .wrap(
                 SessionMiddleware::builder(CookieSessionStore::default(), Key::from(&[0; 64]))
-                    .cookie_secure(false)
-                    // customize session and cookie expiration
+                    .cookie_secure(true)
+                    .cookie_http_only(true)
                     .session_lifecycle(
-                        PersistentSession::default().session_ttl(cookie::time::Duration::hours(2)),
+                        PersistentSession::default().session_ttl(cookie::time::Duration::days(30)),
                     )
+                    .cookie_same_site(cookie::SameSite::None)
                     .build(),
             )
             .service(web::resource("/").to(|| async { "Hello rust devs!" }))
