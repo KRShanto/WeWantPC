@@ -22,9 +22,8 @@ export default function Navbar() {
         <Link href="/login">Login</Link>
         <Link href="/cart">Cart</Link>
         <Link href="/help">Help</Link>
-        {user && user.role === "Admin" && (
-          <Link href="/dashboard">Dashboard</Link>
-        )}
+        {user && <Link href="/profile">Profile</Link>}
+        {user && user.role === "Admin" && <Link href="/admin">Admin</Link>}
       </div>
     </nav>
   );
